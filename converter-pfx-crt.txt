@@ -1,0 +1,14 @@
+certificado ssl
+
+#### Exporta somente a Private Key do certificado com pfx
+openssl pkcs12 -in original.pfx -nocerts -out privateKey.key
+ 
+##### exporta so o end certificate em base64 para endcertificate.crt
+openssl pkcs12 -in original.pfx -clcerts -nokeys -out endcertificate.crt
+ 
+#### Concatena o endcertificate + intermediateCA (em base64) + RootCA (em base64) para o fullchain.crt
+ 
+cat intermediario.crt rootCA.crt > cadeia.crt
+  
+### cria o novo certificado new_certificate.pfx, recebendo como entrada o endcertificate.crt, a private key privateKey.key e o full chain cadeia.crt
+openssl pkcs12 -export -out new_certificate.pfx -inkey privateKey.key -in endcertificate.crt -certfile cadeia.crt
